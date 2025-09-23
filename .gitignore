@@ -1,0 +1,23 @@
+#python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.egg-info/
+.env.local
+.env.*
+.env
+
+#virtual env
+venv/
+
+# VSCode / PyCharm
+.vscode/
+
+logs
+logs/
+
+naming
+exporting

@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:17
+    container_name: scrapper_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+      - ./backend/logs:/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+  redis:
+    image: redis:7-alpine
+    container_name: redis_broker
+    ports:
+      - "6379:6379"
+  celery:
+    build: ./backend
+    container_name: celery_worker
+    command: celery -A setting worker -l info
+    volumes:
+      - ./backend:/app
+      - ./backend/logs:/logs
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+  celery-beat:
+    build: ./backend
+    container_name: celery_beat
+    command: celery -A setting beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+volumes:
+  pgdata:
