@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 # Create your models here.
 class Posts(models.Model):
@@ -12,6 +13,11 @@ class Posts(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def lt(self,**kwargs):
+        for k,v in kwargs.items():
+            q_object=Q(**{f"{k}__lt":v})
+        return self.objects.filter(q_object)
     
 class SubText(models.Model):
     author=models.ForeignKey(Posts,related_name='post',on_delete=models.CASCADE)

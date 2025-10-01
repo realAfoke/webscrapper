@@ -9,6 +9,7 @@ __pycache__/
 .env.local
 .env.*
 .env
+.venv
 
 #virtual env
 venv/
@@ -21,3 +22,8 @@ logs/
 
 naming
 exporting
+
+task.log
+db_data
+.dockerignore
+index2.html

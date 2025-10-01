@@ -34,11 +34,8 @@ SECRET_KEY = 'django-insecure--c*+tz%#nlz*871_wo2iak+t(r-4_1j9$i771@9vt1$v$rb)l%
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=os.environ.get('DEBUG')
-print(DEBUG)
 
 
-ALLOWED_HOSTS = []
-CORS_ALLOW_ALL_ORIGINS=True
 
 
 # Application definition
@@ -91,11 +88,14 @@ WSGI_APPLICATION = 'setting.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASE_URL=os.environ.get('DATABASE_URL')
 if DATABASE_URL:
+    ALLOWED_HOSTS = ['localhost','127.0.0.1']
     DATABASES={
         'default':dj_database_url.parse(DATABASE_URL)
     }
 
 else:
+    ALLOWED_HOSTS = ['localhost','127.0.0.1']
+    CORS_ALLOW_ALL_ORIGINS=True
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql', 
@@ -106,6 +106,8 @@ else:
         'PORT': os.environ.get('PORT', '5432')
     }
 }
+    
+    
 
 
 
@@ -162,4 +164,9 @@ CELERY_BEAT_SCHEDULE={
         'task':'main.tasks.fetch_news',
         'schedule':crontab(minute='*/5')
     }
+}
+
+REST_FRAMEWORK={
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE':10
 }
